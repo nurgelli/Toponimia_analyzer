@@ -1,33 +1,16 @@
-"""
-
-
-Author: Nurgeldi Tuvakov
-Affiliation: Magtymguly Institute of Language, Literature and National Manuscripts
-Context: Pilot study for MA application — Centre for the Study of Manuscript Cultures (CSMC),
-         Universität Hamburg
-"""
-
 import re
 from collections import Counter
 
 
-# ─────────────────────────────────────────────────
-# LEXICAL REFERENCE SETS
-# Words drawn from the Dictionary of the Turkmen
-# Language of the 8th–14th Centuries (3 vols.)
-# and cross-referenced with Clauson's Etymological
-# Dictionary of Pre-Thirteenth-Century Turkish.
-# ─────────────────────────────────────────────────
 
 ARABIC_MARKERS = {
-    # Classical Arabic borrowings common in Oghuz-Khwarezmian didactic texts
     "ilm", "aql", "ruh", "haq", "din", "dunya", "ahiret", "sabr",
     "şükr", "zikr", "fikr", "hal", "maqam", "irfan", "hidayet",
     "nefis", "kalb", "murid", "mumin", "şeyh", "mürid", "kemal",
     "kamal", "muin", "cemal", "celal", "kitab", "hikmet", "maarif",
     "talib", "adab", "edeb", "hüsn", "cevher", "sıfat", "varlık",
     "ümmet", "şeriat", "hakikat", "tarikat", "marifet", "selamet"
-}
+} # Need to attach arabic dictionary
 
 PERSIAN_MARKERS = {
     # Persian borrowings, dominant in Sufi and courtly registers
@@ -37,10 +20,10 @@ PERSIAN_MARKERS = {
     "pervan", "aşk", "mey", "saki", "meydan", "rüzgar", "bağ",
     "gülistan", "destan", "peyam", "mihman", "didar", "güneş",
     "âlem", "eser", "pend", "nasihat", "suhan", "söz", "divan"
-}
+} # Need to attach Persian dictionary
 
 NATIVE_TURKIC_MARKERS = {
-    # Core Oghuz-Turkic lexical stock
+
     "ol", "bu", "sen", "ben", "biz", "siz", "ol", "olar", "bar",
     "yok", "gel", "git", "bil", "al", "ber", "kör", "ayt", "dep",
     "adam", "er", "kişi", "oğul", "kız", "ata", "ana", "yer", "su",
@@ -49,23 +32,16 @@ NATIVE_TURKIC_MARKERS = {
     "söz", "yol", "baş", "el", "göz", "til", "dil", "köŋül", "yürek",
     "könül", "kör", "işit", "aşa", "içir", "yat", "tur", "otur",
     "çıq", "kir", "baq", "gör", "iste", "sev", "bile", "birle"
-}
+} # Need to attach arabic dictionary
 
 
 def normalize(word):
-    """Normalize word to lowercase, strip punctuation."""
     word = word.lower()
     word = re.sub(r"[^\w]", "", word, flags=re.UNICODE)
     return word
 
 
 def classify_word(word):
-    """
-    Classify a word by etymological layer.
-    Returns: 'Arabic', 'Persian', 'Turkic', or 'Unknown'
-    Note: Some words appear in both Persian and Arabic lists (loanword chains).
-    Arabic takes precedence for disambiguation.
-    """
     w = normalize(word)
     if w in ARABIC_MARKERS:
         return "Arabic"
@@ -78,16 +54,13 @@ def classify_word(word):
 
 
 def analyze_text(text, source_name="Unnamed Source"):
-    """
-    Main analysis function.
-    Takes raw text, returns stratification statistics and concordance data.
-    """
+
     print(f"\n{'═'*60}")
     print(f"  OGHUZ LEXICAL STRATIFICATION ANALYZER")
     print(f"  Source: {source_name}")
     print(f"{'═'*60}\n")
 
-    # Tokenize
+
     tokens = re.findall(r"\b\w+\b", text, re.UNICODE)
     total = len(tokens)
 
@@ -113,7 +86,6 @@ def analyze_text(text, source_name="Unnamed Source"):
         bar = "█" * int(pct / 3)
         print(f"  {layer:<10} │ {bar:<20} │ {count:>4} tokens ({pct:5.1f}%)")
 
-    # ── FREQUENCY CONCORDANCE ───────────────────────
     print(f"\n{'─'*60}")
     print("  FREQUENCY CONCORDANCE (top 5 per layer)\n")
     for layer in ["Turkic", "Arabic", "Persian"]:
@@ -124,7 +96,6 @@ def analyze_text(text, source_name="Unnamed Source"):
                 print(f"    {word:<20} × {count}")
             print()
 
-    # ── LOANWORD DENSITY ───────────────────────────
     borrowed = len(layers["Arabic"]) + len(layers["Persian"])
     native   = len(layers["Turkic"])
     ratio    = (borrowed / native) if native > 0 else 0
@@ -146,13 +117,6 @@ def analyze_text(text, source_name="Unnamed Source"):
     return layers
 
 
-# ─────────────────────────────────────────────────
-# SAMPLE TEXTS
-# Excerpts transliterated from manuscript sources
-# used in the Dictionary of the Turkmen Language
-# of the 8th–14th Centuries project.
-# ─────────────────────────────────────────────────
-
 MUINIL_MURID_SAMPLE = """
 Bismillah diyü başladım bu sözni
 Ber ilm ü aql ü hikmet bil özni
@@ -163,6 +127,7 @@ Sabr et selamet tapgıl bu yolda bil
 Oğul sev dost adamı yürek bile
 Şükr eyle her halde könül birle
 """.strip()
+# Later need to change this with whole source
 
 MIHRI_HATUN_SAMPLE = """
 Gül yüzlü yar geldi bahar irişdi
@@ -173,46 +138,19 @@ Dil verdim sana sever yürek bu an
 Mey içme sakın rah-ı irfana dön könül
 Cemal göster didar ver ey hüsn pend
 Kemal bulduk bu aşk ile yıl devrand
-""".strip()
+""".strip() # Later need to change this with whole source
 
-
-# ─────────────────────────────────────────────────
-# RUN ANALYSIS
-# ─────────────────────────────────────────────────
 
 if __name__ == "__main__":
 
     print("\n" + "╔" + "═"*58 + "╗")
-    print("║  PILOT STUDY: Computational Lexical Analysis            ║")
     print("║  Old Oghuz-Turkmen Manuscript Texts                     ║")
-    print("║  Magtymguly Institute — CSMC Hamburg Application        ║")
     print("╚" + "═"*58 + "╝")
 
-    # Analyze Muinil-Mürid excerpt
     analyze_text(MUINIL_MURID_SAMPLE, "Muinil-Mürid (Shaikh Sherip, 14th c.)")
 
-    # Analyze Mihri Hatun excerpt
     analyze_text(MIHRI_HATUN_SAMPLE, "Divan of Mihri Hatun (15th c., Ottoman-Oghuz)")
 
-    # ── COMPARATIVE SUMMARY ────────────────────────
     print("╔" + "═"*58 + "╗")
     print("║  COMPARATIVE OBSERVATION                                ║")
     print("╚" + "═"*58 + "╝")
-    print("""
-  # The Muinil-Mürid, as a Sufi didactic text, shows a higher
-  # density of Arabic borrowings (ilm, aql, hikmet, hakikat),
-  # consistent with its instructional register and the classical
-  # Islamic scholarly tradition in which it operates.
-  # 
-  # The Mihri Hatun Divan shows a stronger Persian loanword
-  # layer (gül, bülbül, jan, dil, şem, pervan), characteristic
-  # of courtly Ottoman-Oghuz poetic convention.
-  # 
-  # Both texts share a native Turkic functional core
-  # (könül, yürek, yol, dost, sev), confirming a shared
-  # Oghuz substrate beneath diverging literary registers.
-  # 
-  # This pattern — shared Turkic substrate, diverging loanword
-  # strata — is the core hypothesis of the proposed MA research
-  # project on lexical stratification in Oghuz manuscript texts.
-  #   """)

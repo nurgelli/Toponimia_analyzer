@@ -13,7 +13,7 @@ A local web application for checking Turkmen research documents against an Excel
 
 ## Excel dictionary format
 
-![Standard words - correct words with incorrects one](excel.png)
+![Standard words - correct words with incorrects one](images/excel.png)
 
 The application reads columns A–C from the first worksheet. A header row is optional. If present, use `Canonical` or `Standart ad` as the first-column header.
 
@@ -54,7 +54,7 @@ The single-file executable is written to `dist\TurkmenAdDenetleyici.exe`. It sta
 
 In executable mode, the database and processed documents are stored under `%LOCALAPPDATA%\TurkmenAdDenetleyici`. Upload the Excel dictionary after the first launch to populate that database.
 
-![Platform](platform.png)
+![Platform](images/platform.png)
 
 ## Matching and correction behavior
 
@@ -66,11 +66,11 @@ In executable mode, the database and processed documents are stored under `%LOCA
 - Commas separate variants in column C, so a name containing a comma is not supported by that delimiter.
 
 
-![Result without automatic correction](result.png)
+![Result without automatic correction](images/result.png)
 
 ---
 
-![Result with automatic correction](automatic.png)
+![Result with automatic correction](images/automatic.png)
 
 ## Build files
 

@@ -7,6 +7,7 @@ import html
 import os
 import re
 import sqlite3
+import sys
 import unicodedata
 import uuid
 from collections import Counter
@@ -23,7 +24,11 @@ from openpyxl import load_workbook
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = Path(os.environ.get("TXT_ANALYZER_DATA_DIR", BASE_DIR / "data"))
+if getattr(sys, "frozen", False):
+    default_data_dir = Path(os.environ.get("LOCALAPPDATA", Path.home())) / "TurkmenAdDenetleyici"
+else:
+    default_data_dir = BASE_DIR / "data"
+DATA_DIR = Path(os.environ.get("TXT_ANALYZER_DATA_DIR", default_data_dir))
 DB_PATH = DATA_DIR / "names.sqlite3"
 OUTPUT_DIR = DATA_DIR / "processed"
 DATA_DIR.mkdir(parents=True, exist_ok=True)

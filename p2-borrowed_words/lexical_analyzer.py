@@ -4,34 +4,34 @@ from collections import Counter
 
 
 ARABIC_MARKERS = {
-    "ilm", "aql", "ruh", "haq", "din", "dunya", "ahiret", "sabr",
-    "şükr", "zikr", "fikr", "hal", "maqam", "irfan", "hidayet",
-    "nefis", "kalb", "murid", "mumin", "şeyh", "mürid", "kemal",
-    "kamal", "muin", "cemal", "celal", "kitab", "hikmet", "maarif",
-    "talib", "adab", "edeb", "hüsn", "cevher", "sıfat", "varlık",
-    "ümmet", "şeriat", "hakikat", "tarikat", "marifet", "selamet"
+    "ylym", "akl", "ruh", "hak",  "dünýä", "ahyrýet", "sabyr",
+    "şükür", "zikir", "pikir", "hal", "makam", "yrfan",
+    "nebis", "kalp", "mürit", "mömin", "şeýh",  "kemal",
+    "kemal", "mugyn", "cemal", "jelal", "kitap", "hikmet", "magaryf",
+    "talyp", "edep", "hüsni-jemal", "jöwher", "sypat", "barlyk",  
+    "hakykat", "tarykat", "salamat"
 } # Need to attach arabic dictionary
 
 PERSIAN_MARKERS = {
     # Persian borrowings, dominant in Sufi and courtly registers
-    "dil", "jan", "rah", "gül", "bülbül", "şem", "perde", "ser",
-    "del", "yar", "dost", "düşmen", "padişah", "şah", "vezir",
-    "name", "nâme", "hane", "zaman", "devran", "bahar", "gülzar",
-    "pervan", "aşk", "mey", "saki", "meydan", "rüzgar", "bağ",
-    "gülistan", "destan", "peyam", "mihman", "didar", "güneş",
-    "âlem", "eser", "pend", "nasihat", "suhan", "söz", "divan"
+    "dil", "jan", "rah", "gül", "bilbil", "şem", "perde", "ser",
+    "del", "ýar", "dost", "duşman", "patyşa", "şah", "wezir",
+    "nama", "hana", "zaman", "döwran", "bahar", "gülzar",
+    "perwana", "meý", "saky", "meýdan",  "bag", "bagban",
+    "gülistan", "dessan", "myhman", "didar", "güneş",
+    "älem", "eser", "pent", "nesihat", "suwhan", "söz", "diwan"
 } # Need to attach Persian dictionary
 
 NATIVE_TURKIC_MARKERS = {
 
-    "ol", "bu", "sen", "ben", "biz", "siz", "ol", "olar", "bar",
-    "yok", "gel", "git", "bil", "al", "ber", "kör", "ayt", "dep",
-    "adam", "er", "kişi", "oğul", "kız", "ata", "ana", "yer", "su",
-    "at", "it", "kuş", "gün", "gece", "yıl", "ay", "kara", "ak",
-    "büyük", "kiçi", "köp", "az", "iyi", "yaman", "doğru", "yalan",
-    "söz", "yol", "baş", "el", "göz", "til", "dil", "köŋül", "yürek",
-    "könül", "kör", "işit", "aşa", "içir", "yat", "tur", "otur",
-    "çıq", "kir", "baq", "gör", "iste", "sev", "bile", "birle"
+    "ol", "bu", "sen", "ben", "biz", "siz", "bol", "olar", "bar",
+    "yok", "gel", "git", "bil", "al", "ber", "kör", "aýt", "dep",
+    "adam", "är", "kişi", "ogul", "gyz", "ata", "ene", "ýer", "sus",
+    "at", "it", "guş", "gün", "gije", "ýyl", "aý", "gara", "ak",
+    "uly", "kiçi", "köp", "az", "gowy", "ýaman", "dogry", "ýalan",
+    "söz", "ýol", "baş", "el", "göz", "til", "dil", "köňül", "ýürek",
+    "kör", "eşit", "aşa", "içir", "ýat", "tur", "otur",
+    "çyk", "gir", "bak", "gör", "isle", "söý", "bile", "birle"
 } # Need to attach arabic dictionary
 
 

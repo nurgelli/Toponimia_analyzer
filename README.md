@@ -1,22 +1,31 @@
-# Türkmen adları için Word denetleyicisi (MVP)
+# Turkmen Name Checker (MVP)
 
-Excel'deki standart kişi, yer, ülke ve diğer adları ile bilinen yanlış yazım biçimlerini yerel SQLite sözlüğüne alır. Yüklenen `.docx` belgelerini tarar; kayıtlı yanlış varyantları kırmızı, modelin olası yazım tahminlerini mavi işaretler ve işlenmiş belgeyi indirmeye sunar.
+A local web application for checking Turkmen research documents against an Excel-based name dictionary. It stores canonical names, categories, and known spelling variants in SQLite, then scans Word `.docx` files and returns a marked copy.
 
-## Excel şeması
+## Features
 
-İlk çalışma sayfasındaki ilk üç sütun kullanılır. Başlık satırı isteğe bağlıdır.
+- Import a dictionary from an `.xlsx` workbook.
+- Mark known spelling variants in **red**.
+- Use a character n-gram TF-IDF model with edit-similarity ranking to suggest likely, unlisted variants in **blue**.
+- Optionally replace red, dictionary-listed variants with their canonical spelling by selecting **“Awtomatiki düzetmelimi?”** before scanning. Blue suggestions are never automatically changed.
+- Reset the dictionary from the home page and start learning from newly uploaded Excel data.
+- Keep the database and processed documents on the local machine.
 
-| Sütun | İçerik | Örnek |
+## Excel dictionary format
+
+The application reads columns A–C from the first worksheet. A header row is optional. If present, use `Canonical` or `Standart ad` as the first-column header.
+
+| Column | Value | Example |
 |---|---|---|
-| A | Standart/doğru ad | Ali |
-| B | Adın türü veya etiketi | İnsan ady |
-| C | Yanlış yazımlar; virgül, noktalı virgül, `|` veya satır sonuyla ayrılabilir | `[Aly, Äli, Äly]` |
+| A | Canonical/standard name | Änew |
+| B | Category or label | Person name |
+| C | Known incorrect spellings, separated by commas, semicolons, `|`, or line breaks | `[Anou, Anau, Anow]` |
 
-Her yanlış yazım ayrı bir varyant olarak saklanır. Aynı dosyayı tekrar yüklemek mevcut kayıtları çoğaltmaz. Yeni yüklenen kayıtlar sözlüğe eklenir.
+Each variant is stored separately. Re-uploading existing rows does not duplicate them; new rows are added to the existing dictionary. The reset button clears the dictionary so it can be rebuilt from newly uploaded data.
 
-## Kurulum ve başlatma
+## Run from source
 
-Python 3.10 veya üstü gerekir.
+Requirements: Windows, Python 3.10 or newer, and an internet connection to install dependencies.
 
 ```powershell
 py -m venv .venv
@@ -25,15 +34,37 @@ pip install -r requirements.txt
 uvicorn app:app --reload
 ```
 
-Tarayıcıda `http://127.0.0.1:8000` adresini açın. Önce `.xlsx` sözlüğünü, ardından `.docx` belgesini yükleyin. SQLite veritabanı `data/names.sqlite3` içinde, işlenmiş Word dosyaları `data/processed/` içinde saklanır. Veri dizinini değiştirmek için uygulamayı başlatmadan önce `TXT_ANALYZER_DATA_DIR` ortam değişkenini ayarlayın.
+Open `http://127.0.0.1:8000`, upload the Excel dictionary, then upload a `.docx` file. The application returns a download link for the processed document.
 
-## MVP kapsamı
+In source mode, SQLite data is stored in `data/names.sqlite3` and processed documents in `data/processed/`. Set `TXT_ANALYZER_DATA_DIR` before startup to use a different local data directory.
 
-- Uygulama Excel varyantları üzerinde karakter n-gram TF-IDF en yakın komşu modelini her belge taramasında yeniden eğitir. Bilinen varyantlar kırmızı, yeterince benzer olup Excel'de birebir bulunmayan olası yazımlar mavi işaretlenir.
-- Mavi sonuç, en yakın kayıtlı varyantı ve benzerlik puanını raporlar. Puan olasılık değildir; tahminler belgeyi otomatik değiştirmez. Küçük veya belirsiz eşleşmeler için tahmin eşiği kullanılır.
-- Excel yüklemeleri var olan sözlüğe eklenir. Ana sayfadaki sıfırlama düğmesi bütün sözlük kayıtlarını siler; sonraki belge taraması yeni Excel verileriyle modeli yeniden oluşturur.
-- Kırmızı eşleşmeler Excel listesine göre tamdır; mavi tahminler karakter benzerliği modelinin önerileridir.
-- Harf büyüklüğü dikkate alınmaz; Türkmen harfleri korunur. Eşleşmeler kelime sınırlarına göre aranır.
-- Gövde metni, tablolar, üstbilgi ve altbilgiler taranır. “Awtomatiki düzetmelimi?” seçeneği işaretlenirse yalnızca kırmızı eşleşmeler standart adla değiştirilir; mavi tahminlere dokunulmaz.
-- Word biçimi `.docx` olmalıdır. Eski `.doc` dosyalarını önce Word'de `.docx` olarak kaydedin.
-- Şu an C sütununda varyantların virgülle ayrılması, varyantın kendisinde virgül içeren adlar için uygun değildir.
+## Build the Windows executable
+
+Create a virtual environment named `venv`, then run the build script from PowerShell in the project directory:
+
+```powershell
+py -m venv venv
+venv\Scripts\Activate.ps1
+.\build_exe.ps1
+```
+
+The single-file executable is written to `dist\TurkmenAdDenetleyici.exe`. It starts the local web server and opens the default browser. Keep the console window open while using the app; close it to stop the server. The executable does not require Python to be installed on the target computer.
+
+In executable mode, the database and processed documents are stored under `%LOCALAPPDATA%\TurkmenAdDenetleyici`. Upload the Excel dictionary after the first launch to populate that database.
+
+## Matching and correction behavior
+
+- Red matches are exact matches against variants listed in column C, ignoring letter case and respecting word boundaries.
+- Blue suggestions are generated for single words of at least four characters. The model is refitted from the current SQLite dictionary for each document scan.
+- The displayed similarity score is not a calibrated probability. Review blue suggestions before using them.
+- With automatic correction enabled, only red matches are replaced with the canonical name from column A. Blue suggestions stay unchanged.
+- The scanner checks document paragraphs, tables, headers, and footers. It accepts `.docx`; convert legacy `.doc` files to `.docx` before uploading.
+- Commas separate variants in column C, so a name containing a comma is not supported by that delimiter.
+
+## Build files
+
+- `app.py` — FastAPI application and document processing
+- `launcher.py` — starts the server and opens the browser
+- `requirements.txt` — application dependencies
+- `requirements-build.txt` — application and PyInstaller dependencies
+- `build_exe.ps1` — Windows executable build script

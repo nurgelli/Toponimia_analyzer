@@ -9,7 +9,7 @@ if (-not (Test-Path -LiteralPath $pythonExe)) {
 if ($LASTEXITCODE -ne 0) { throw "Installing build requirements failed." }
 
 & $pythonExe -m PyInstaller --noconfirm --clean --onefile --console `
-    --name "TurkmenAdDenetleyici" `
+    --name "TurkmenAtBarlayjy" `
     --collect-data sklearn `
     --collect-all uvicorn `
     --collect-all fastapi `
@@ -17,4 +17,4 @@ if ($LASTEXITCODE -ne 0) { throw "Installing build requirements failed." }
     (Join-Path $PSScriptRoot "launcher.py")
 if ($LASTEXITCODE -ne 0) { throw "PyInstaller build failed." }
 
-Write-Host "EXE ready: $(Join-Path $PSScriptRoot 'dist\TurkmenAdDenetleyici.exe')"
+Write-Host "EXE ready: $(Join-Path $PSScriptRoot 'dist\TurkmenAtBarlayjy.exe')"

@@ -31,8 +31,8 @@ def main() -> None:
     port = choose_port()
     url = f"http://127.0.0.1:{port}"
     threading.Thread(target=open_browser, args=(url,), daemon=True).start()
-    print(f"Türkmen ad denetleyicisi çalışıyor: {url}")
-    print("Uygulamayı kapatmak için bu pencereyi kapatın veya Ctrl+C tuşlarına basın.")
+    print(f"Işläp başlady: {url}")
+    print("Platformany ýapmak üçin bu penjiräni ýaňyň ýa-da Ctrl+C düwmesine basyň.")
     uvicorn.run(app, host="127.0.0.1", port=port, log_level="info")
 
 

@@ -25,6 +25,23 @@ The application reads columns A–C from the first worksheet. A header row is op
 
 Each variant is stored separately. Re-uploading existing rows does not duplicate them; new rows are added to the existing dictionary. The reset button clears the dictionary so it can be rebuilt from newly uploaded data.
 
+## Word-origin analysis
+
+The sidebar has a second workspace, **Word Origin Analysis** (`/origins`). It uses a separate Excel workbook and SQLite table, so its language vocabulary is independent of the name dictionary above.
+
+In the first worksheet, put one language name in each cell of the first row. Enter words belonging to that language beneath its header. Add as many language columns as needed; for example:
+
+| Arabic | Turkmen | Persian | Russian   | Turkish |
+| ------ | ------- | ------- | -------   | ------- |
+| kitap  | öý      | bazar   | astanowka | şehir   |
+| galam  | suw     | dost    | stol      | güzel   |
+
+Upload this workbook in the **Word Origin Analysis** workspace. A new origin workbook replaces the previous origin vocabulary, while the first name dictionary continues to accumulate new rows until its own reset button is used. The origin reset button clears only the origin vocabulary.
+
+The scanner highlights exact vocabulary matches using a distinct color for each language. It also predicts likely language matches for similar, unlisted words; predictions are underlined and included separately from exact counts. The report shows exact counts and each language's share of all document tokens, along with predicted counts, ambiguous matches, and unknown words. A word present in multiple language columns is reported as ambiguous and is not assigned to any language. Similarity scores are rankings, not calibrated probabilities, so predictions should be reviewed.
+
+The returned `.docx` copy retains the language colors and underlines. Origin analysis does not automatically replace or rewrite words.
+
 ## Run from source
 
 Requirements: Windows, Python 3.10 or newer, and an internet connection to install dependencies.
@@ -38,6 +55,21 @@ uvicorn app:app --reload
 
 Open `http://127.0.0.1:8000`, upload the Excel dictionary, then upload a `.docx` file. The application returns a download link for the processed document.
 
+## Project structure
+
+The code is split by responsibility under `txt_analyzer/`:
+
+- `config.py` — local data and output paths
+- `database.py` — SQLite connection and schema initialization
+- `utils.py` — shared text normalization and Excel cell parsing
+- `name_dictionary.py` — name dictionary import and spelling similarity model
+- `origin_dictionary.py` — language lexicon import and origin similarity model
+- `documents.py` — Word document scanning, highlighting, and report counts
+- `web.py` — FastAPI application, pages, and upload/download routes
+- root `app.py` — small compatibility entry point for `uvicorn app:app`
+
+`launcher.py` and `build_exe.ps1` continue to start/package the same FastAPI application through the compatibility entry point.
+
 In source mode, SQLite data is stored in `data/names.sqlite3` and processed documents in `data/processed/`. Set `TXT_ANALYZER_DATA_DIR` before startup to use a different local data directory.
 
 ## Build the Windows executable
@@ -50,9 +82,9 @@ venv\Scripts\Activate.ps1
 .\build_exe.ps1
 ```
 
-The single-file executable is written to `dist\TurkmenAdDenetleyici.exe`. It starts the local web server and opens the default browser. Keep the console window open while using the app; close it to stop the server. The executable does not require Python to be installed on the target computer.
+The single-file executable is written to `dist\TurkmenAtBarlayjy.exe`. It starts the local web server and opens the default browser. Keep the console window open while using the app; close it to stop the server. The executable does not require Python to be installed on the target computer.
 
-In executable mode, the database and processed documents are stored under `%LOCALAPPDATA%\TurkmenAdDenetleyici`. Upload the Excel dictionary after the first launch to populate that database.
+In executable mode, the database and processed documents are stored under `%LOCALAPPDATA%\TurkmenAtBarlayjy`. Upload the Excel dictionary after the first launch to populate that database.
 
 ![Platform](images/platform.png)
 

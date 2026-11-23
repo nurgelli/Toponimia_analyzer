@@ -13,6 +13,8 @@ A local web application for checking Turkmen research documents against an Excel
 
 ## Excel dictionary format
 
+![Standard words - correct words with incorrects one](excel.png)
+
 The application reads columns A–C from the first worksheet. A header row is optional. If present, use `Canonical` or `Standart ad` as the first-column header.
 
 | Column | Value | Example |
@@ -52,6 +54,8 @@ The single-file executable is written to `dist\TurkmenAdDenetleyici.exe`. It sta
 
 In executable mode, the database and processed documents are stored under `%LOCALAPPDATA%\TurkmenAdDenetleyici`. Upload the Excel dictionary after the first launch to populate that database.
 
+![Platform](platform.png)
+
 ## Matching and correction behavior
 
 - Red matches are exact matches against variants listed in column C, ignoring letter case and respecting word boundaries.
@@ -60,6 +64,13 @@ In executable mode, the database and processed documents are stored under `%LOCA
 - With automatic correction enabled, only red matches are replaced with the canonical name from column A. Blue suggestions stay unchanged.
 - The scanner checks document paragraphs, tables, headers, and footers. It accepts `.docx`; convert legacy `.doc` files to `.docx` before uploading.
 - Commas separate variants in column C, so a name containing a comma is not supported by that delimiter.
+
+
+![Result without automatic correction](result.png)
+
+---
+
+![Result with automatic correction](automatic.png)
 
 ## Build files
 

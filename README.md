@@ -1,4 +1,4 @@
-# Turkmen Name Checker (MVP)
+# Turkmen Toponimic names Checker
 
 A local web application for checking Turkmen research documents against an Excel-based name dictionary. It stores canonical names, categories, and known spelling variants in SQLite, then scans Word `.docx` files and returns a marked copy.
 
@@ -17,11 +17,11 @@ A local web application for checking Turkmen research documents against an Excel
 
 The application reads columns A–C from the first worksheet. A header row is optional. If present, use `Canonical` or `Standart ad` as the first-column header.
 
-| Column | Value | Example |
-|---|---|---|
-| A | Canonical/standard name | Änew |
-| B | Category or label | Person name |
-| C | Known incorrect spellings, separated by commas, semicolons, `|`, or line breaks | `[Anou, Anau, Anow]` |
+| Column | Value                                                         | Example           |
+| ------ | ------------------------------------------------------------- | ----------------- | -------------------- |
+| A      | Canonical/standard name                                       | Änew              |
+| B      | Category or label                                             | Person name       |
+| C      | Known incorrect spellings, separated by commas, semicolons, ` | `, or line breaks | `[Anou, Anau, Anow]` |
 
 Each variant is stored separately. Re-uploading existing rows does not duplicate them; new rows are added to the existing dictionary. The reset button clears the dictionary so it can be rebuilt from newly uploaded data.
 
@@ -64,7 +64,6 @@ In executable mode, the database and processed documents are stored under `%LOCA
 - With automatic correction enabled, only red matches are replaced with the canonical name from column A. Blue suggestions stay unchanged.
 - The scanner checks document paragraphs, tables, headers, and footers. It accepts `.docx`; convert legacy `.doc` files to `.docx` before uploading.
 - Commas separate variants in column C, so a name containing a comma is not supported by that delimiter.
-
 
 ![Result without automatic correction](images/result.png)
 
